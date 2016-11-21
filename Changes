@@ -1,6 +1,7 @@
 Revision history for Set::Similarity
 
 {{$NEXT}}
+       - improve test coverage
 
 0.02  2016-11-21 01:11:35 CET
        - dependency 'parent'

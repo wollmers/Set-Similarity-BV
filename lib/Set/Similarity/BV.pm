@@ -20,8 +20,8 @@ sub similarity {
   return 1 if (!($hex1 || $hex2));    # both zero
   return 0 unless ($hex1 && $hex2);   # one is zero
 
-  return 1 if (!(hex($hex1) || hex($hex2)));    # both zero
-  return 0 unless (hex($hex1) && hex($hex2) ); # one is zero
+  #return 1 if (!(hex($hex1) || hex($hex2)));    # both zero
+  #return 0 unless (hex($hex1) && hex($hex2) ); # one is zero
 
   return $self->from_integers(
     hex($hex1),
@@ -154,6 +154,12 @@ Croaks if called directly. This method should be implemented in a child module.
 =head2 min
 
   my $min = $object->min($int1,$int2);
+
+=head2 bits
+
+  my $bits = $object->bits($int);
+
+Returns the number of bits set in integer.
 
 
 =head1 SEE ALSO
