@@ -5,7 +5,6 @@ use warnings;
 use lib qw(../lib/);
 
 use Test::More;
-use Data::Dumper;
 
 my $class = 'Set::Similarity::BV::Cosine';
 
