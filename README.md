@@ -15,11 +15,11 @@ Set::Similarity::BV - similarity measures for sets using fast bit vectors (BV)
 
     # object method
     my $dice = Set::Similarity::BV::Dice->new;
-    my $similarity = $dice->similarity('Photographer','Fotograf');
+    my $similarity = $dice->similarity('af09ff','9c09cc');
 
     # class method
     my $dice = 'Set::Similarity::BV::Dice';
-    my $similarity = $dice->similarity('Photographer','Fotograf');
+    my $similarity = $dice->similarity('af09ff','9c09cc');
 
 # DESCRIPTION
 
