@@ -83,6 +83,12 @@ Croaks if called directly. This method should be implemented in a child module.
 
     my $min = $object->min($int1,$int2);
 
+## bits
+
+    my $bits = $object->bits($int);
+
+Returns the number of bits set in integer.
+
 # SEE ALSO
 
 [Set::Similarity::BV::Cosine](https://metacpan.org/pod/Set::Similarity::BV::Cosine)
