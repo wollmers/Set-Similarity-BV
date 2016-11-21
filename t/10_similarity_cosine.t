@@ -30,5 +30,6 @@ is($object->similarity('a0','0a'),0,'a0 unequal 0a');
 is($object->similarity('f','3'),0.5,'f 0.5 3');
 
 is($object->similarity('f'x8,'3'x8),0.5,'fx8 0.5 3x8');
+is($object->similarity('ff'x8,'ff'x8),1,'ffx8 0.5 ffx8');
 
 done_testing;

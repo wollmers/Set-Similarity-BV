@@ -23,6 +23,8 @@ sub similarity {
   #return 1 if (!(hex($hex1) || hex($hex2)));    # both zero
   #return 0 unless (hex($hex1) && hex($hex2) ); # one is zero
 
+  no warnings 'portable'; # for 0xffffffffffffffff
+
   return $self->from_integers(
     hex($hex1),
     hex($hex2),

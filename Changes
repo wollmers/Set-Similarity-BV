@@ -1,6 +1,7 @@
 Revision history for Set::Similarity
 
 {{$NEXT}}
+       - no warnings 'portable'
 
 0.03  2016-11-21 06:43:00 CET
        - improve test coverage
