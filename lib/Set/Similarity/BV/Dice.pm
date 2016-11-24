@@ -50,11 +50,11 @@ following new ones.
 
 =head2 from_integers
 
-  my $similarity = $object->from_integers($int1,$int2);
+  my $similarity = $object->from_integers($AoI1,$AoI2);
 
-This method expects two integers as parameters. The parameters are not checked, thus can lead to funny results or uncatched divisions by zero.
+This method expects two array references of integers as parameters. The parameters are not checked, thus can lead to funny results or uncatched divisions by zero.
 
-If you want to use this method directly, you should catch the situation where one of the integers is empty (similarity is 0), or both are empty (similarity is 1).
+If you want to use this method directly, you should catch the situation where one of the parameters is empty (similarity is 0), or both are empty (similarity is 1).
 
 =head1 SOURCE REPOSITORY
 

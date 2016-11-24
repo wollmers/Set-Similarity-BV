@@ -1,6 +1,7 @@
 Revision history for Set::Similarity
 
 {{$NEXT}}
+       - work with bitvectors longer than an integer
 
 0.04  2016-11-21 07:51:29 CET
        - no warnings 'portable'

@@ -7,13 +7,24 @@ use parent 'Set::Similarity::BV';
 
 our $VERSION = '0.04';
 
+use Data::Dumper;
+
 sub from_integers {
   my ($self, $v1, $v2) = @_;
+
+  #print Dumper($v1, $v2);
+  #print 'from_integers() $v1: ',$v1->[0],' $v2: ',$v2->[0],"\n";
+
+  #print 'from_integers: ',"\n";
+  #print '  $self->bits($v1): ',$self->bits($v1),' ',"\n";
+  #print '  $self->bits($v2): ',$self->bits($v2),' ',"\n";
+  #print '  $self->intersection($v1,$v2): ',$self->intersection($v1,$v2),' ',"\n";
+  #print '  $self->bits($v2): ',$self->bits($v2),' ',"\n";
 
   # it is so simple because the vectors contain only 0 and 1
   return (
     $self->intersection($v1,$v2) / (
-      sqrt($self->bits($v1)) * sqrt($self->bits($v1))
+      sqrt($self->bits($v1)) * sqrt($self->bits($v2))
     )
   );
 }
@@ -48,11 +59,11 @@ following new ones.
 
 =head2 from_integers
 
-  my $similarity = $object->from_integers($int1,$int2);
+  my $similarity = $object->from_integers($AoI1,$AoI2);
 
-This method expects two integers as parameters. The parameters are not checked, thus can lead to funny results or uncatched divisions by zero.
+This method expects two array references of integers as parameters. The parameters are not checked, thus can lead to funny results or uncatched divisions by zero.
 
-If you want to use this method directly, you should catch the situation where one of the integers is empty (similarity is 0), or both are empty (similarity is 1).
+If you want to use this method directly, you should catch the situation where one of the parameters is empty (similarity is 0), or both are empty (similarity is 1).
 
 =head1 SOURCE REPOSITORY
 

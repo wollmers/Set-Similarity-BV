@@ -6,6 +6,9 @@ use warnings;
 our $VERSION = '0.04';
 
 use Carp 'croak';
+use Data::Dumper;
+
+our $width = int 0.999+log(~0)/log(2);
 
 sub new {
   my $class = shift;
@@ -26,8 +29,8 @@ sub similarity {
   no warnings 'portable'; # for 0xffffffffffffffff
 
   return $self->from_integers(
-    hex($hex1),
-    hex($hex2),
+    $self->_integers($hex1),
+    $self->_integers($hex2),
   );
 }
 
@@ -37,21 +40,53 @@ sub from_integers { croak 'Method "from_integers" not implemented in subclass' }
 sub intersection {
   my ($self,$v1,$v2) = @_;
 
-  return $self->bits($v1 & $v2);
+  no warnings 'portable'; # for 0xffffffffffffffff
+
+  my $bits = 0;
+  my $max1 = scalar(@{$v1}) - 1;
+  my $max2 = scalar(@{$v2}) - 1;
+
+  for (my $i=0; ($i <= $max1) && ($i <= $max2); $i++) {
+    $bits += $self->bits([ ($v1->[$i] & $v2->[$i]) ]);
+  }
+  return $bits;
+}
+
+sub _integers {
+  my ($self,$hex_string) = @_;
+
+  my $chunk_size = int($width/4);
+  my @chunks = $hex_string =~ m/([0-9a-f]{1,$chunk_size})/gi;
+
+  no warnings 'portable'; # for 0xffffffffffffffff
+  my $result = [];
+  for my $chunk (@chunks) {
+    push @{$result},hex($chunk);
+  }
+  return $result;
 }
 
 sub bits {
-  my $v = $_[1];
+  my ($self,$array_of_integers) = @_;
 
   use integer;
   no warnings 'portable'; # for 0xffffffffffffffff
 
-  $v = $v - (($v >> 1) & 0x5555555555555555);
-  $v = ($v & 0x3333333333333333) + (($v >> 2) & 0x3333333333333333);
-  # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 ----------------------vv
-  $v = (($v + ($v >> 4) & 0x0f0f0f0f0f0f0f0f) * 0x0101010101010101) >> 56;
+  # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 # for 64 bit
+  # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 # for 32 bit
+  my $final_shift = (($width/8) - 1) * 8;
 
-  return $v;
+  my $bits = 0;
+  for my $i (@{$array_of_integers}) {
+    my $v = $i; # don't use (and change) $i directly
+    $v = $v - (($v >> 1) & 0x5555555555555555);
+    $v = ($v & 0x3333333333333333) + (($v >> 2) & 0x3333333333333333);
+    # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 ----------------------vv
+    $v = (($v + ($v >> 4) & 0x0f0f0f0f0f0f0f0f) * 0x0101010101010101) >> $final_shift;
+    $bits += $v;
+  }
+
+  return $bits;
 }
 
 sub combined_length {
@@ -98,6 +133,16 @@ Set::Similarity::BV - similarity measures for sets using fast bit vectors (BV)
 
 This is the base class including mainly helper and convenience methods.
 
+Use one of the child classes:
+
+L<Set::Similarity::BV::Cosine>
+
+L<Set::Similarity::BV::Dice>
+
+L<Set::Similarity::BV::Jaccard>
+
+L<Set::Similarity::BV::Overlap>
+
 =head2 Overlap coefficient
 
 ( A intersect B ) / min(A,B)
@@ -136,22 +181,23 @@ All methods can be used as class or object methods.
 
 C<$hex> is a string of hexadecimal characters.
 
-C<$width> must be integer, or defaults to 1.
-
 =head2 from_integers
 
-  my $similarity = $object->from_integers($int1,$int2);
+  my $similarity = $object->from_integers($AoI1,$AoI2);
 
 Croaks if called directly. This method should be implemented in a child module.
 
 =head2 intersection
 
-  my $intersection_size = $object->intersection($int1,$int2);
+  my $intersection_size = $object->intersection($AoI1,$AoI2);
 
+C<$AoI> is an array reference of integers. Returns the length of the intersection.
 
 =head2 combined_length
 
-  my $set_size_sum = $object->combined_length($int1,$int2);
+  my $set_size_sum = $object->combined_length($AoI1,$AoI2);
+
+C<$AoI> is an array reference of integers.
 
 =head2 min
 
