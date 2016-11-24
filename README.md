@@ -25,6 +25,16 @@ Set::Similarity::BV - similarity measures for sets using fast bit vectors (BV)
 
 This is the base class including mainly helper and convenience methods.
 
+Use one of the child classes:
+
+[Set::Similarity::BV::Cosine](https://metacpan.org/pod/Set::Similarity::BV::Cosine)
+
+[Set::Similarity::BV::Dice](https://metacpan.org/pod/Set::Similarity::BV::Dice)
+
+[Set::Similarity::BV::Jaccard](https://metacpan.org/pod/Set::Similarity::BV::Jaccard)
+
+[Set::Similarity::BV::Overlap](https://metacpan.org/pod/Set::Similarity::BV::Overlap)
+
 ## Overlap coefficient
 
 ( A intersect B ) / min(A,B)
@@ -63,21 +73,23 @@ All methods can be used as class or object methods.
 
 `$hex` is a string of hexadecimal characters.
 
-`$width` must be integer, or defaults to 1.
-
 ## from\_integers
 
-    my $similarity = $object->from_integers($int1,$int2);
+    my $similarity = $object->from_integers($AoI1,$AoI2);
 
 Croaks if called directly. This method should be implemented in a child module.
 
 ## intersection
 
-    my $intersection_size = $object->intersection($int1,$int2);
+    my $intersection_size = $object->intersection($AoI1,$AoI2);
+
+`$AoI` is an array reference of integers. Returns the length of the intersection.
 
 ## combined\_length
 
-    my $set_size_sum = $object->combined_length($int1,$int2);
+    my $set_size_sum = $object->combined_length($AoI1,$AoI2);
+
+`$AoI` is an array reference of integers.
 
 ## min
 

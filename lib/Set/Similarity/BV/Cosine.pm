@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Set::Similarity::BV';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Data::Dumper;
 

@@ -1,6 +1,8 @@
 Revision history for Set::Similarity
 
 {{$NEXT}}
+
+0.05  2016-11-24 10:42:15 CET
        - work with bitvectors longer than an integer
 
 0.04  2016-11-21 07:51:29 CET
