@@ -7,3 +7,7 @@ on test => sub {
     requires 'Test::More', '0.88';
     requires 'Test::Exception', '0';
 };
+
+on 'develop' => sub {
+  requires 'Test::Pod','1.41';
+}

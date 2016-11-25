@@ -6,9 +6,19 @@ use warnings;
 our $VERSION = '0.05';
 
 use Carp 'croak';
-use Data::Dumper;
+
 
 our $width = int 0.999+log(~0)/log(2);
+our $chunk_size = int($width/4);
+
+# https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+our $final_shift = (($width/8) - 1) * 8;
+no warnings 'portable'; # for 0xffffffffffffffff
+our $x01 = hex(substr('01'x16,0,$chunk_size));
+our $x33 = hex(substr('33'x16,0,$chunk_size));
+our $x55 = hex(substr('55'x16,0,$chunk_size));
+our $x0f = hex(substr('0f'x16,0,$chunk_size));
+
 
 sub new {
   my $class = shift;
@@ -55,7 +65,6 @@ sub intersection {
 sub _integers {
   my ($self,$hex_string) = @_;
 
-  my $chunk_size = int($width/4);
   my @chunks = $hex_string =~ m/([0-9a-f]{1,$chunk_size})/gi;
 
   no warnings 'portable'; # for 0xffffffffffffffff
@@ -72,19 +81,16 @@ sub bits {
   use integer;
   no warnings 'portable'; # for 0xffffffffffffffff
 
-  # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 # for 64 bit
-  # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 # for 32 bit
-  my $final_shift = (($width/8) - 1) * 8;
-
   my $bits = 0;
-  for my $i (@{$array_of_integers}) {
-    my $v = $i; # don't use (and change) $i directly
-    $v = $v - (($v >> 1) & 0x5555555555555555);
-    $v = ($v & 0x3333333333333333) + (($v >> 2) & 0x3333333333333333);
-    # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = 56 ----------------------vv
-    $v = (($v + ($v >> 4) & 0x0f0f0f0f0f0f0f0f) * 0x0101010101010101) >> $final_shift;
-    $bits += $v;
-  }
+
+    for my $i (@{$array_of_integers}) {
+      my $v = $i; # don't use (and change) $i directly
+      $v = $v - (($v >> 1) & $x55);
+      $v = ($v & $x33) + (($v >> 2) & $x33);
+      # (bytesof($v) -1) * bitsofbyte = (8-1)*8 = --vvvvvvv
+      $v = (($v + ($v >> 4) & $x0f) * $x01) >> $final_shift;
+      $bits += $v;
+    }
 
   return $bits;
 }
