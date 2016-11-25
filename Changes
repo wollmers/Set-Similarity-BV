@@ -1,6 +1,8 @@
 Revision history for Set::Similarity
 
 {{$NEXT}}
+
+0.06  2016-11-25 20:01:21 CET
       - solve integer overflow on 32-bit integers
 
 0.05  2016-11-24 10:42:15 CET

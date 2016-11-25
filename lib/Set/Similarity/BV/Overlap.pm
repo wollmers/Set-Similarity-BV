@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Set::Similarity::BV';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub from_integers {
   my ($self, $v1, $v2) = @_;
